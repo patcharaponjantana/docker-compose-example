@@ -3,9 +3,9 @@ services:
   postgres:
     image: "postgres:latest"
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=postgres_password
     ports:
-      - "5432:${POSTGRES_PORT}"
+      - "5432:5432"
   nginx:
     depends_on:
       - api
@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - "${BASE_NGINX_PORT}:80"
+      - "3050:80"
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -24,11 +24,11 @@ services:
       - /app/node_modules
       - ./server:/app
     environment:
-      PGHOST: ${POSTGRES_HOST}
-      PGDATABASE: ${POSTGRES_DB_NAME}
-      PGPORT: ${POSTGRES_PORT}
-      PGUSER: ${POSTGRES_USER}            
-      PGPASSWORD: ${POSTGRES_PASSWORD}      
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
   client:
     stdin_open: true
     environment:
